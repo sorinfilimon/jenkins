@@ -1,13 +1,23 @@
 # https://hub.docker.com/r/jenkins/jenkins/tags/
-FROM jenkins/jenkins:2.179-alpine
+
+FROM jenkins/jenkins:2.180
 
 USER root
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh gettext make docker
-
-# Allow the jenkins user to run docker
-RUN usermod -a -G docker jenkins
+# Install the latest Docker CE binaries
+RUN apt-get update && \
+    apt-get -y install apt-transport-https \
+      ca-certificates \
+      curl \
+      gnupg2 \
+      software-properties-common && \
+    curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg > /tmp/dkey; apt-key add /tmp/dkey && \
+    add-apt-repository \
+      "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+      $(lsb_release -cs) \
+      stable" && \
+   apt-get update && \
+   apt-get -y install docker-ce
 
 # Drop back to the regular jenkins user
 USER jenkins
