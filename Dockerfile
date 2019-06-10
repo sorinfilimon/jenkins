@@ -7,7 +7,7 @@ RUN apk update && apk upgrade && \
     apk add --no-cache bash git openssh gettext make docker
 
 # Allow the jenkins user to run docker
-RUN adduser jenkins docker
+RUN usermod -a -G docker jenkins
 
 # Drop back to the regular jenkins user
 USER jenkins
