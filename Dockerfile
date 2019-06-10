@@ -2,7 +2,7 @@
 
 FROM jenkins/jenkins:2.180
 
-USER root
+USER jenkins
 
 # Install the latest Docker CE binaries
 RUN apt-get update && \
@@ -18,11 +18,6 @@ RUN apt-get update && \
       stable" && \
    apt-get update && \
    apt-get -y install docker-ce
-
-RUN usermod -a -G docker jenkins
-
-# Drop back to the regular jenkins user
-USER jenkins
 
 # 1. Disable Jenkins setup Wizard UI. The initial user and password will be supplied by Terraform via ENV vars during infrastructure creation
 # 2. Set Java DNS TTL to 60 seconds
